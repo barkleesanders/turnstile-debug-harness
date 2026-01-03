@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NY.gov Self Registration + Turnstile</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/nygov.css" />
+    <script defer src="/nygov.js"></script>
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=renderNygovTurnstile&render=explicit"
+      defer
+    ></script>
+  </head>
+  <body class="nygov">
+    <header class="nygov-header">
+      <div>
+        <p class="eyebrow">my.ny.gov</p>
+        <h1>NY.GOV ID Self Registration (Demo)</h1>
+      </div>
+      <p class="build">Build: 12/05/2025 9:11 PM · Turnstile enabled</p>
+    </header>
+
+    <main class="nygov-main">
+      <section class="nygov-panel">
+        <p>
+          Unfortunately, your identity was not able to be verified and an account cannot be created at this time.
+          In production this screen is a dead end—below we show how to require a Turnstile challenge before retrying.
+        </p>
+
+        <form id="registrationerrorform" autocomplete="off">
+          <div class="row">
+            <label>
+              First Name
+              <input type="text" name="name" required placeholder="Pat" />
+            </label>
+            <label>
+              Email
+              <input type="email" name="email" required placeholder="pat@example.com" />
+            </label>
+          </div>
+
+          <div class="blocked-callout">
+            <p>
+              Before support escalates your case, prove you are human. Once you complete Turnstile the hidden token is
+              sent to `/api/register` with the rest of your information.
+            </p>
+            <div id="turnstile-wrapper" class="turnstile-widget" aria-live="polite"></div>
+          </div>
+
+          <div id="nygov-status" class="status" role="status"></div>
+
+          <button type="submit">Retry Verification</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

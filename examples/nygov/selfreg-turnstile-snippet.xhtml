@@ -1,0 +1,13 @@
+<!-- Drop this into selfregblocked.xhtml or the relevant JSF include -->
+<ui:fragment>
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=renderNygovTurnstile&render=explicit"
+    defer
+  ></script>
+  <script src="/resources/js/nygov.js" defer></script>
+
+  <h:panelGroup layout="block" styleClass="turnstile-wrapper">
+    <div id="turnstile-wrapper" aria-live="polite"></div>
+    <h:inputHidden id="turnstileToken" value="#{selfRegBackingBean.turnstileToken}" />
+  </h:panelGroup>
+</ui:fragment>
