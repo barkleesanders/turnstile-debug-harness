@@ -1,0 +1,37 @@
+<ui:composition template="/SelfRegV3/layout/template.xhtml"
+  xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html">
+  <ui:define name="content">
+    <h:panelGroup id="signInBox" layout="block">
+      <p>Unfortunately, your identity was not able to be verified...</p>
+
+      <h:panelGroup layout="block" styleClass="blocked-callout">
+        <p>Complete reCAPTCHA so support receives a valid human-verification token.</p>
+        <div id="recaptcha-widget" class="recaptcha-widget"></div>
+        <h:inputHidden id="recaptchaToken" value="#{selfRegBackingBean.recaptchaToken}" />
+      </h:panelGroup>
+
+      <h:commandButton id="retry" value="Retry" onclick="return submitWithRecaptcha(event)" />
+    </h:panelGroup>
+
+    <h:outputScript>
+      function submitWithRecaptcha(event) {
+        if (!window.latestRecaptchaToken) {
+          PrimeFaces.showMessageInDialog({summary:'reCAPTCHA required', detail:'Solve the challenge first.'});
+          return false;
+        }
+        document.getElementById('registrationerrorform:recaptchaToken').value = window.latestRecaptchaToken;
+        return true;
+      }
+
+      function onRecaptchaReady(){
+        grecaptcha.render('recaptcha-widget', {
+          sitekey: '#{config.recaptchaSiteKey}',
+          callback: function(token){ window.latestRecaptchaToken = token; },
+          'expired-callback': function(){ window.latestRecaptchaToken = ''; }
+        });
+      }
+    </h:outputScript>
+
+    <h:outputScript name="https://www.google.com/recaptcha/api.js?onload=onRecaptchaReady&render=explicit" />
+  </ui:define>
+</ui:composition>

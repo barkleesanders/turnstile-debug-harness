@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { getConfig } from './config.js';
 import { verifyTurnstileToken } from './turnstile.js';
+import { verifyRecaptchaToken } from './recaptcha.js';
 import { DebugAgent } from './instrumentation/debugAgent.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,6 +12,7 @@ const __dirname = path.dirname(__filename);
 export function createApp({ logger = console, config: configOverrides = {}, services = {} } = {}) {
   const appConfig = { ...getConfig(), ...configOverrides };
   const verifyChallenge = services.verifyTurnstileToken || verifyTurnstileToken;
+  const verifyRecaptcha = services.verifyRecaptchaToken || verifyRecaptchaToken;
   const debugAgent = new DebugAgent(logger);
 
   const app = express();
@@ -23,6 +25,10 @@ export function createApp({ logger = console, config: configOverrides = {}, serv
 
   app.get('/api/config', (_req, res) => {
     res.json({ turnstileSiteKey: appConfig.turnstileSiteKey });
+  });
+
+  app.get('/api/recaptcha-config', (_req, res) => {
+    res.json({ recaptchaSiteKey: appConfig.recaptchaSiteKey });
   });
 
   app.post('/api/register', async (req, res) => {
@@ -55,6 +61,40 @@ export function createApp({ logger = console, config: configOverrides = {}, serv
       return res.json({ ok: true, message: `Thanks ${name}, your submission has been accepted.` });
     } catch (error) {
       debugAgent.trace('turnstile.verification.error', { message: error.message });
+      return res.status(500).json({ error: 'Server error' });
+    }
+  });
+
+  app.post('/api/register-recaptcha', async (req, res) => {
+    const { name, email, recaptchaToken } = req.body;
+
+    if (!name || !email) {
+      return res.status(400).json({ error: 'Name and email are required.' });
+    }
+
+    try {
+      const verification = await verifyRecaptcha({
+        token: recaptchaToken,
+        secretKey: appConfig.recaptchaSecretKey,
+        remoteIp: req.ip
+      });
+
+      debugAgent.trace('recaptcha.verification.complete', {
+        success: verification.success,
+        code: verification.code
+      });
+
+      if (!verification.success) {
+        return res.status(403).json({
+          error: 'reCAPTCHA verification failed.',
+          code: verification.code,
+          detail: verification.detail
+        });
+      }
+
+      return res.json({ ok: true, message: `Thanks ${name}, your registration has been accepted.` });
+    } catch (error) {
+      debugAgent.trace('recaptcha.verification.error', { message: error.message });
       return res.status(500).json({ error: 'Server error' });
     }
   });

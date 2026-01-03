@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NY.gov Self Registration – reCAPTCHA Fix</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/nygov.css" />
+    <script defer src="/selfreg-recaptcha.js"></script>
+    <script
+      src="https://www.google.com/recaptcha/api.js?onload=initSelfregRecaptcha&render=explicit"
+      async
+      defer
+    ></script>
+  </head>
+  <body class="nygov">
+    <header class="nygov-header">
+      <div>
+        <p class="eyebrow">my.ny.gov</p>
+        <h1>NY.GOV ID Self Registration (reCAPTCHA)</h1>
+      </div>
+      <p class="build">Build: 12/05/2025 9:11 PM · reCAPTCHA patched</p>
+    </header>
+
+    <main class="nygov-main">
+      <section class="nygov-panel">
+        <p>
+          This version keeps the original Google reCAPTCHA Enterprise UX but ensures the token is rendered, stored, and
+          posted correctly. Mirror these changes into <code>selfregblocked.xhtml</code> if you want to keep reCAPTCHA
+          rather than switching to Turnstile.
+        </p>
+
+        <form id="selfreg-recaptcha-form" autocomplete="off">
+          <label>
+            First Name *
+            <input type="text" name="firstName" required placeholder="Pat" />
+          </label>
+
+          <label>
+            Email *
+            <input type="email" name="email" required placeholder="pat@example.com" />
+          </label>
+
+          <div class="blocked-callout">
+            <p>
+              Solve the reCAPTCHA challenge; once the callback fires the hidden field below will contain a valid token
+              accepted by <code>/api/register-recaptcha</code>.
+            </p>
+            <div id="recaptcha-widget" class="recaptcha-widget"></div>
+            <input type="hidden" id="recaptchaToken" name="recaptchaToken" />
+          </div>
+
+          <div id="recaptcha-status" class="status" role="status"></div>
+
+          <button type="submit">Submit Registration</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
