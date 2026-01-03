@@ -1,0 +1,27 @@
+{
+  "name": "cloudflare-turnstile-demo",
+  "version": "1.0.0",
+  "description": "Example Express app showing Cloudflare Turnstile integration with instrumentation harnesses.",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test",
+    "harness": "node src/instrumentation/carmackHarness.js"
+  },
+  "keywords": [
+    "cloudflare",
+    "turnstile",
+    "captcha",
+    "express"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.4"
+  }
+}
