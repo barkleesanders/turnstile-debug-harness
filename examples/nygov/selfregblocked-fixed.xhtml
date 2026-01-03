@@ -1,0 +1,35 @@
+<ui:composition template="/SelfRegV3/layout/template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html">
+  <ui:define name="content">
+    <h:panelGroup layout="block" id="signInBox">
+      <p>Unfortunately, your identity was not able to be verified...</p>
+
+      <!-- Turnstile Fix Start -->
+      <h:panelGroup layout="block" styleClass="blocked-callout">
+        <p>Solve the Turnstile challenge so support can see a valid human token.</p>
+        <div id="turnstile-wrapper" aria-live="polite"></div>
+        <h:inputHidden id="turnstileToken" value="#{selfRegBackingBean.turnstileToken}" />
+      </h:panelGroup>
+      <!-- Turnstile Fix End -->
+
+      <h:commandButton id="submit" value="Retry" onclick="return selfregSubmit(event)" />
+    </h:panelGroup>
+
+    <h:outputScript target="body">
+      function selfregSubmit(event) {
+        if (!window.turnstileTokenValue) {
+          PrimeFaces.showMessageInDialog({summary:'Captcha required', detail:'Solve Turnstile first.'});
+          return false;
+        }
+        document.getElementById('registrationerrorform:turnstileToken').value = window.turnstileTokenValue;
+        return true;
+      }
+      function renderSelfregTurnstile(){
+        turnstile.render('#turnstile-wrapper',{sitekey:'#{config.turnstileSiteKey}', callback:function(token){
+          window.turnstileTokenValue = token;
+        }});
+      }
+    </h:outputScript>
+    <h:outputScript name="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=renderSelfregTurnstile&render=explicit" />
+  </ui:define>
+</ui:composition>

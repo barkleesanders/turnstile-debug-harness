@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NY.gov Self Registration – Fixed Demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/nygov.css" />
+    <script defer src="/selfreg-fixed.js"></script>
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=renderSelfregTurnstile&render=explicit"
+      defer
+    ></script>
+  </head>
+  <body class="nygov">
+    <header class="nygov-header">
+      <div>
+        <p class="eyebrow">my.ny.gov</p>
+        <h1>NY.GOV ID Self Registration (Fixed)</h1>
+      </div>
+      <p class="build">Build: 12/05/2025 9:11 PM · Fixed for Turnstile</p>
+    </header>
+
+    <main class="nygov-main">
+      <section class="nygov-panel">
+        <p>
+          This local page mirrors <code>selfregblocked.xhtml</code> but adds a working Turnstile gate. Completing the
+          challenge populates the hidden token, enabling the submit handler to call <code>/api/register</code>.
+        </p>
+
+        <form id="selfreg-form" autocomplete="off">
+          <div class="row">
+            <label>
+              First Name *
+              <input type="text" name="firstName" required placeholder="Pat" />
+            </label>
+            <label>
+              Last Name *
+              <input type="text" name="lastName" required placeholder="Example" />
+            </label>
+          </div>
+
+          <label>
+            Email *
+            <input type="email" name="email" required placeholder="pat@example.com" />
+          </label>
+
+          <label>
+            Phone
+            <input type="tel" name="phone" placeholder="(555) 123-4567" />
+          </label>
+
+          <div class="blocked-callout">
+            <p>
+              Solve the Turnstile challenge so your support request carries a valid human-verification token. This is
+              the exact step missing on the production page when users see “identity not verified”.
+            </p>
+            <div id="selfreg-turnstile" class="turnstile-widget" aria-live="polite"></div>
+            <input type="hidden" id="turnstileToken" name="turnstileToken" />
+          </div>
+
+          <div id="selfreg-status" class="status" role="status"></div>
+
+          <button type="submit">Submit Registration</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
