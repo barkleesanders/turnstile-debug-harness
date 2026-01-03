@@ -146,6 +146,15 @@ RECAPTCHA_SECRET_KEY=your_secret_key
 
 ---
 
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [CAPTCHA Bug Analysis](docs/CAPTCHA_BUG_ANALYSIS.md) | Deep technical analysis of the BotDetect CSS collapse bug |
+| [FOIL Request R000252-010326](docs/FOIL_REQUEST_R000252-010326.md) | Full text of the Freedom of Information request submitted |
+
+---
+
 ## License
 
 MIT
